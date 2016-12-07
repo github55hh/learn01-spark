@@ -1,4 +1,4 @@
-package cn.itcast.spark.sql
+package cn.zhuchangbao.spark.sql
 
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.sql.SQLContext
@@ -39,8 +39,8 @@ case class Person(id: Int, name: String, age: Int)
 
 //提交任务
 /usr/local/spark-1.5.2-bin-hadoop2.6/bin/spark-submit \
---class cn.itcast.spark.sql.InferringSchema \
---master spark://node1.itcast.cn:7077 \
+--class cn.zhuchangbao.spark.sql.InferringSchema \
+--master spark://hdp01:7077 \
 /root/spark-mvn-1.0-SNAPSHOT.jar \
-hdfs://node1.itcast.cn:9000/person.txt \
-hdfs://node1.itcast.cn:9000/out 
+hdfs://hdp01:9000/person.txt \
+hdfs://hdp01:9000/out 
