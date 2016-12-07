@@ -6,38 +6,38 @@ import org.apache.spark.sql.SQLContext
 object InferringSchema {
   def main(args: Array[String]) {
 
-    //´´½¨SparkConf()²¢ÉèÖÃAppÃû³Æ
+    //åˆ›å»ºSparkConf()å¹¶è®¾ç½®Appåç§°
     val conf = new SparkConf().setAppName("SQL-1")
-    //SQLContextÒªÒÀÀµSparkContext
+    //SQLContextè¦ä¾èµ–SparkContext
     val sc = new SparkContext(conf)
-    //´´½¨SQLContext
+    //åˆ›å»ºSQLContext
     val sqlContext = new SQLContext(sc)
 
-    //´ÓÖ¸¶¨µÄµØÖ·´´½¨RDD
+    //ä»æŒ‡å®šçš„åœ°å€åˆ›å»ºRDD
     val lineRDD = sc.textFile(args(0)).map(_.split(" "))
 
-    //´´½¨case class
-    //½«RDDºÍcase class¹ØÁª
+    //åˆ›å»ºcase class
+    //å°†RDDå’Œcase classå…³è”
     val personRDD = lineRDD.map(x => Person(x(0).toInt, x(1), x(2).toInt))
-    //µ¼ÈëÒşÊ½×ª»»£¬Èç¹û²»µ½ÈËÎŞ·¨½«RDD×ª»»³ÉDataFrame
-    //½«RDD×ª»»³ÉDataFrame
+    //å¯¼å…¥éšå¼è½¬æ¢ï¼Œå¦‚æœä¸åˆ°äººæ— æ³•å°†RDDè½¬æ¢æˆDataFrame
+    //å°†RDDè½¬æ¢æˆDataFrame
     import sqlContext.implicits._
     val personDF = personRDD.toDF
-    //×¢²á±í
+    //æ³¨å†Œè¡¨
     personDF.registerTempTable("t_person")
-    //´«ÈëSQL
+    //ä¼ å…¥SQL
     val df = sqlContext.sql("select * from t_person order by age desc limit 2")
-    //½«½á¹ûÒÔJSONµÄ·½Ê½´æ´¢µ½Ö¸¶¨Î»ÖÃ
+    //å°†ç»“æœä»¥JSONçš„æ–¹å¼å­˜å‚¨åˆ°æŒ‡å®šä½ç½®
     df.write.json(args(1))
-    //Í£Ö¹Spark Context
+    //åœæ­¢Spark Context
     sc.stop()
   }
 }
-//case classÒ»¶¨Òª·Åµ½ÍâÃæ
+//case classä¸€å®šè¦æ”¾åˆ°å¤–é¢
 case class Person(id: Int, name: String, age: Int)
 
 
-//Ìá½»ÈÎÎñ
+//æäº¤ä»»åŠ¡
 /usr/local/spark-1.5.2-bin-hadoop2.6/bin/spark-submit \
 --class cn.itcast.spark.sql.InferringSchema \
 --master spark://node1.itcast.cn:7077 \
